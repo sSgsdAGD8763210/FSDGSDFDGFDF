@@ -1,0 +1,238 @@
+- Variables and setting up the character
+local rs = game:GetService("RunService")
+
+local plr  = game:GetService("Players").LocalPlayer
+local char = plr.Character
+char.Archivable = true
+local cam  = workspace:WaitForChild("Camera")
+local savedpos = char.HumanoidRootPart.CFrame
+local Rig = char:Clone()
+Rig.Parent = workspace
+Rig.Name = "Rig"
+
+local character = game.Players.LocalPlayer.Character
+game.Players.LocalPlayer.Character = nil
+game.Players.LocalPlayer.Character = character
+if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then 
+    for i,v in pairs(character:GetChildren()) do
+        if v:IsA("Accessory") then
+            for i,v in pairs(v.Handle:GetChildren()) do
+                if v:IsA("Attachment") then
+                    v:Destroy()
+                end
+            end
+        end
+    end
+end
+wait(game.Players.RespawnTime + 0.5)
+if game.Players.LocalPlayer.Character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    character.Humanoid:FindFirstChildOfClass("NumberValue"):Destroy()
+end
+--hat drop
+character.HumanoidRootPart:Destroy()
+for i,v in pairs(character:GetChildren()) do
+    if v:IsA("BasePart") and v.Name ~= "Head" then
+        v:Destroy()
+    end
+end
+character.Head:Destroy()
+
+game.Players.RespawnTime = 9e9*9e9*9e9
+Rig.HumanoidRootPart.CFrame = savedpos
+local fakechar = Rig
+
+game.Workspace.CurrentCamera.CameraSubject = Rig.Humanoid
+cam.CameraSubject = fakechar:FindFirstChildOfClass("Humanoid")
+
+local connections = {}
+local kill = false
+
+   -- Networking
+   for i, v in pairs(char:GetChildren()) do
+    if v:IsA("Accessory") then 
+	    		table.insert(connections, rs.Heartbeat:Connect(function()
+				v.Handle.Velocity = Vector3.new(0, -30, 0)
+       		end))
+		end
+	end
+
+-- Align function
+local function Align(Part1, Part0, Position, Angle)
+   Part1.CanCollide = false
+
+   local AlignPos = Instance.new("AlignPosition")
+   AlignPos.ApplyAtCenterOfMass = true
+   AlignPos.MaxForce = 100000
+   AlignPos.MaxVelocity = math.huge
+   AlignPos.ReactionForceEnabled = false
+   AlignPos.Responsiveness = 200
+   AlignPos.RigidityEnabled = false
+   AlignPos.Parent = Part1
+
+   local AlignOri = Instance.new("AlignOrientation")
+   AlignOri.MaxAngularVelocity = math.huge
+   AlignOri.MaxTorque = 100000
+   AlignOri.PrimaryAxisOnly = false
+   AlignOri.ReactionTorqueEnabled = false
+   AlignOri.Responsiveness = 200
+   AlignOri.RigidityEnabled = false
+   AlignOri.Parent = Part1
+
+   local at1 = Instance.new("Attachment")
+   at1.Parent = Part1
+   local at2 = Instance.new("Attachment")
+   at2.Parent = Part0
+   at2.Orientation = Angle
+   at2.Position = Position
+   
+   AlignPos.Attachment0 = at1
+   AlignPos.Attachment1 = at2
+   AlignOri.Attachment0 = at1
+   AlignOri.Attachment1 = at2
+end
+
+local success, fail = pcall(function()
+   -- Make the fake character invisible
+   for _,v in pairs(fakechar:GetDescendants()) do
+       if v:IsA("Part") then
+           v.Transparency = 1
+       elseif v:IsA("SpecialMesh") then
+           v.MeshId = "rbxassetid://0"
+       end
+   end
+   
+   
+   
+local parts = {
+["HumanoidRootPart"] = true,
+["Head"] = true
+}
+   -- Networking
+
+   
+      
+
+   
+            for _,v in pairs(char:GetChildren()) do
+       if v:IsA("Accessory") and v.Name ~= "Head" and v.Name ~= "Torso" and v.Name ~= "SeeMonkey" and v.Name ~= "LavanderHair"  and v.Name ~= "Kate Hair" and v.Name ~= "Pink Hair"   and v.Name ~= "Pal Hair"  and v.Name ~= "RCap" then
+                 local brr = char[v.Name].Handle:FindFirstChildOfClass("Weld")
+            brr:Destroy()
+            v.Handle.Velocity = Vector3.new(0, -30, 0)
+               Align(char[v.Name].Handle, fakechar[v.Name].Handle, Vector3.new(0,0,0),Vector3.new(0,0,0))
+           end
+         end
+  
+   
+
+local Clip = false
+
+speaker = game.Players.LocalPlayer
+   
+	local function NoclipLoop()
+		if Clip == false and game.Players.LocalPlayer.Character ~= nil then
+			for _, child in pairs(speaker.Character:GetDescendants()) do
+				if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
+					child.CanCollide = false
+				end
+			end
+		end
+	end
+	Noclipping = game:GetService('RunService').Stepped:Connect(NoclipLoop)
+   
+   
+	local function NoclipLoop2()
+		if Clip == false  then
+			for _, child in pairs(fakechar:GetDescendants()) do
+				if child:IsA("BasePart") and child.CanCollide == true and child.Name ~= floatName then
+					child.CanCollide = false
+				end
+			end
+		end
+	end
+	Noclipping2 = game:GetService('RunService').Stepped:Connect(NoclipLoop2)
+   
+   -- Rigging
+
+
+   -- Align
+   for _,v in pairs(char:GetChildren()) do
+       if v:IsA("Part") and v.Name ~= "Head" and v.Name ~= "Torso" and v.Name ~= "HumanoidRootPart" then
+               Align(char[v.Name], fakechar[v.Name], Vector3.new(0,0,0),Vector3.new(0,0,0))
+           end
+       end
+end)
+
+fakechar.Name = "Dummy"
+
+
+
+
+ 
+char["SeeMonkey"].Handle:ClearAllChildren()
+char["Pal Hair"].Handle:ClearAllChildren()
+char["Pink Hair"].Handle:ClearAllChildren()
+char["Kate Hair"].Handle:ClearAllChildren()
+char["LavanderHair"].Handle:ClearAllChildren()
+ Align(char["SeeMonkey"].Handle, fakechar["Torso"], Vector3.new(0,0,0),Vector3.new(90,0,0))
+  Align(char["Pal Hair"].Handle, fakechar["Right Leg"], Vector3.new(0,0,0),Vector3.new(90,0,0))
+   Align(char["Kate Hair"].Handle, fakechar["Left Leg"], Vector3.new(0,0,0),Vector3.new(90,0,0))
+    Align(char["Pink Hair"].Handle, fakechar["Left Arm"], Vector3.new(0,0,0),Vector3.new(90,0,0))
+     Align(char["LavanderHair"].Handle, fakechar["Right Arm"], Vector3.new(0,0,0),Vector3.new(90,0,0)) 
+
+      
+     
+if fail then
+   warn(fail)
+   plr.Character = char
+   char:BreakJoints()
+   fakechar:Destroy()
+
+   kill = true
+   return
+end
+
+-- Cleanup
+fakechar.Humanoid.Died:Connect(function()
+   plr.Character = char
+   char:BreakJoints()
+   fakechar:Destroy()
+
+   kill = true
+
+   for _,v in pairs(connections) do v:Disconnect() end
+end)
+
+local folder = char.Animate:Clone()
+folder.Parent = fakechar
+for i, v in pairs(char.Animate:GetChildren()) do
+    local new = v:Clone()
+    new.Parent = folder
+end
+
+local uis = game:GetService('UserInputService')
+
+uis.InputBegan:Connect(function(input, istyping)
+    if input.KeyCode == Enum.KeyCode.Space then
+        if istyping == false then
+        fakechar.Humanoid.Jump = true
+    end
+    end
+end)
+
+game:GetService("StarterGui"):SetCore("SendNotification", { 
+	Title = "Hat Reanim With Collision:";
+	Text = "Made by alsoo3, Hat collision by ShownApe";})
+Duration = 16;
+
+Player=game.Players.LocalPlayer
+Character=game.Workspace["Dummy"]
+hum = Character.Humanoid
+local player = game.Players.LocalPlayer.Character
+
+player.Parent = game.Workspace["Dummy"]
+
+
+game:GetService("RunService").Stepped:Connect(function()
+fakechar:FindFirstChildOfClass("Humanoid"):Move(game.Players.LocalPlayer.Character:WaitForChild("Humanoid").MoveDirection, false)
+end)
+
